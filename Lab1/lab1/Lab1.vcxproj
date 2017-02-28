@@ -95,12 +95,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bird.cpp" />
+    <ClCompile Include="bird.cpp" />
     <ClCompile Include="Draw.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bird.h" />
+    <ClInclude Include="bird.h" />
     <ClInclude Include="Draw.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>

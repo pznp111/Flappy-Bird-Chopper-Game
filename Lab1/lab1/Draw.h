@@ -40,5 +40,5 @@ static int posX = 20;
 static int posY = 20;
 static GLuint texSet[9];
 static int diffIndex = 3;
-
+static bool isGameOver = false;
 void chopper(double);

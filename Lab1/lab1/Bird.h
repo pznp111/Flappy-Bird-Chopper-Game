@@ -3,6 +3,7 @@
 class Objects
 {
 public:
+	double x, y;
 	Objects() {
 		x = 0;
 		y = 0;
@@ -11,7 +12,6 @@ public:
 		x = a;
 		y = b;
 	}
-	double x, y;
 	virtual void Draw() = 0;
 	virtual void Update() = 0;
 };
@@ -21,15 +21,13 @@ void static ResetJump(int voidNumber)
 	gravity -= jumpHigh;
 }
 
-class Bird : public Objects
+class MyChopper : public Objects
 {
 	double speed;
 	bool isAlive;
 public:
-	Bird() : Bird(0, 0, 0, true) {}
-	//Bird(double a, double b) :Bird(a, b, 0, true) {}
-	//Bird(double a, double b, double s) :Bird(a, b, s, true) {}
-	Bird(double a, double b, double s, bool livingStatus)
+	MyChopper() : MyChopper(0, 0, 0, true) {}
+	MyChopper(double a, double b, double s, bool livingStatus)
 	{
 		x = a;
 		y = b;
@@ -50,27 +48,11 @@ public:
 	{
 		if (isStarted) {
 			if (!isAlive) return;
-		/*	if (isBounceBack) {
-				y -= speed;
-				if (y< 200) {
-					isBounceBack = false;
-				}
-			}
-			else {*/
-			//	if (y < -300) {
-					if (y > 300 || y < -300) {
+				if (y > 300 || y < -300) {
 					Die();
 				}
-			//	if (y >= 250) {
-			//		isBounceBack = true;
-			//		y -= speed;
-			//		speed -= gravity;
-			//	}
-				//else {
 					y += speed;
 					speed += gravity;
-			//	}
-			//}
 		}
 	}
 	void Jump()
@@ -79,16 +61,14 @@ public:
 			return;
 		}
 		else {
-
-			gravity += jumpHigh;
-			
+			gravity += jumpHigh;			
 			glutTimerFunc(20, ResetJump, 0);
-
 		}
 	}
 	void Die()
 	{
 		isAlive = false;
+		isGameOver = true;
 	}
 };
 
@@ -106,10 +86,10 @@ public:
 	Blockers() : Blockers(550, rand() % (200 - 10) + 10) {}
 	Blockers(double a, double b)
 	{
-		cout << a;
-		cout << "/n";
-		cout << b;
-		cout << "/n";
+		//cout << a;
+		//cout << "/n";
+		//cout << b;
+		//cout << "/n";
 		if ((rand() % (200 - 10) + 10) % 3 == 1) {
 			b = b * -1;
 		}
@@ -229,7 +209,7 @@ public:
 	void changeDiff(int newDiff) {
 		this->speed = 0.1 * newDiff;
 	}
-	bool Collide(Bird* p)
+	bool Collide(MyChopper* p)
 	{
 		if (p->x > x - 25 && p->x < x + 50 )
 			if (p->y-32   < y - 50 || p->y-13  > y + 50)

@@ -31,10 +31,12 @@ GLuint loadMyTextures(char *filename, int mode)
 	// open and read texture data
 	//file = fopen(filename, "rb");
 	fopen_s(&file, filename, "rb");
-	if (file == NULL)
-		cout << "Error! Missing texture!\n";
-	else
-		cout << "texture successfully loaded\n";
+	if (file == NULL) {
+		//cout << "Error! Missing texture!\n";
+	}
+	else {
+		//cout << "texture successfully loaded\n";
+	}
 
 	fread(tex, width * height * 3, 1, file);
 	fclose(file);
@@ -145,7 +147,7 @@ void drawStarting() {
 }
 
 std::list<Blockers*> Blockerss = std::list<Blockers*>();
-Bird* bird;
+MyChopper* myChopper;
 
 void KeyboardFunc(unsigned char key, int x, int y)
 {
@@ -153,7 +155,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 	{
 	case 'p':
 	case 'P':
-		if (bird->Alive())
+		if (myChopper->Alive())
 			TogglePause();
 		break;
 	case 'r':
@@ -165,16 +167,19 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		exit(0);
 	case 'd':
 	case 'D':
-		if (!isPaused) {
-			bird->x += 5;
-			break;
+		if (!isGameOver) {
+			if (!isPaused) {
+				myChopper->x += 5;
+				break;
+			}
 		}
 	case 'a':
 	case 'A':
-		//if (true) {
-		if (!isPaused) {
-			bird->x -= 5;
-			break;
+		if (!isGameOver) {
+			if (!isPaused) {
+				myChopper->x -= 5;
+				break;
+			}
 		}
 	case '1':
 		diffIndex = 1;
@@ -199,13 +204,13 @@ void KeyboardFunc(unsigned char key, int x, int y)
 			isStarted = true;
 		}
 	
-			bird->Jump();
+			myChopper->Jump();
 		
 		if (!isPaused) {
 			PlaySoundA((LPCSTR) "jump.WAV", NULL, SND_FILENAME | SND_ASYNC);
 		}
 	default:
-		//bird->Jump();
+		//myChopper->Jump();
 		break;
 	}
 }
@@ -213,40 +218,8 @@ void KeyboardFunc(unsigned char key, int x, int y)
 //Update Game
 void Update(int useless)
 {
-	if (!isPaused && bird->Alive()) {
-		bird->Update();
-		/*
-		if (diffIndex == 1) {
-			if (frame % 2700 == 0)
-			{
-				Blockerss.insert(Blockerss.end(), new Blockers());
-			}
-		}
-		if (diffIndex == 2) {
-			if (frame % 1350 == 0)
-			{
-				Blockerss.insert(Blockerss.end(), new Blockers());
-			}
-		}
-		if (diffIndex == 3) {
-			if (frame % 900 == 0)
-			{
-				Blockerss.insert(Blockerss.end(), new Blockers());
-			}
-		}
-		if (diffIndex == 4) {
-			if (frame % 675 == 0)
-			{
-				Blockerss.insert(Blockerss.end(), new Blockers());
-			}
-		}
-		if (diffIndex == 5) {
-			if (frame % 540 == 0)
-			{
-				Blockerss.insert(Blockerss.end(), new Blockers());
-			}
-		}
-		*/
+	if (!isPaused && myChopper->Alive()) {
+		myChopper->Update();
 		if (frame == 1) {
 			Blockerss.insert(Blockerss.end(), new Blockers());
 		}
@@ -255,7 +228,7 @@ void Update(int useless)
 			if ((*it)->isLastBlk() && (*it)->xPosIs() <= 300) {
 				(*it)->changeLast(false);
 				Blockerss.insert(Blockerss.end(), new Blockers());
-				cout << "inserted";
+				//cout << "inserted";
 			}
 			(*it)->changeDiff(diffIndex);
 			(*it)->Update();
@@ -265,10 +238,10 @@ void Update(int useless)
 				it = Blockerss.erase(it);
 			}
 			//die if collide
-			if ((*it)->Collide(bird)) {
-				bird->Die();
+			if ((*it)->Collide(myChopper)) {
+				myChopper->Die();
 			}
-			if (bird->x > (*it)->x) {
+			if (myChopper->x > (*it)->x) {
 				if (!(*it)->isScoredFunc()) {
 					score++;
 					PlaySoundA((LPCSTR) "smilling.WAV", NULL, SND_FILENAME | SND_ASYNC);
@@ -314,10 +287,10 @@ void Display()
 	
 
 	/////
-	bird->Draw();
+	myChopper->Draw();
 	for (std::list<Blockers*>::iterator it = Blockerss.begin(); it != Blockerss.end(); ++it)
 		(*it)->Draw();
-	if (!bird->Alive())
+	if (!myChopper->Alive())
 		DrawDeathScreen();
 	if (!isStarted) {
 		DrawDeathScreen();
@@ -363,29 +336,24 @@ void init(void)
 	glutKeyboardFunc(KeyboardFunc);
 	glutTimerFunc(5, Update, 0);
 	srand(time(nullptr));
-	bird = new Bird(posX+200, posY, 0, true);
+	myChopper = new MyChopper(posX+200, posY, 0, true);
 
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_NORMALIZE);
 
 
 	//load textures
-	texSet[0] = loadMyTextures("bird1.bmp", 1);
-	texSet[1] = loadMyTextures("brick1.bmp", 0);
-	texSet[2] = loadMyTextures("brick2.bmp", 0);
-	texSet[3] = loadMyTextures("brick3.bmp", 0);
+	//texSet[0] = loadMyTextures("bird1.bmp", 1);
+	//texSet[1] = loadMyTextures("brick1.bmp", 0);
+	//texSet[2] = loadMyTextures("brick2.bmp", 0);
+	//texSet[3] = loadMyTextures("brick3.bmp", 0);
 	texSet[4] = loadMyTextures("background.bmp", 0);
 	texSet[5] = loadMyTextures("Wood7.bmp", 0);
-	texSet[6] = loadMyTextures("dragon.bmp", 0);
+	//texSet[6] = loadMyTextures("dragon.bmp", 0);
 	texSet[7] = loadMyTextures("bg4.bmp", 0);
 	texSet[8] = loadMyTextures("title.bmp", 0);
 	
 
-
-
-
-	//cout << texSet[0];
-	//test();
 }
 int main(int argc, char* argv[])
 {
@@ -393,10 +361,16 @@ int main(int argc, char* argv[])
 	//glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(winWidth, winHeight);
-	glutCreateWindow("Floppy Bird");
+	glutCreateWindow("Floppy MyChopper");
 	
 
-
+	cout << "control: " << "\n";
+	cout <<"A to go left" << "\n";
+	cout << "D to go right" << "\n";
+	cout << "Space to go jump" << "\n";
+	cout << "P to go pause" << "\n";
+	cout << "R to go restart" << "\n";
+	cout << "Num:1/2/3/4/5 to change difficulty level" << "\n";
 
 	init();
 	glutDisplayFunc(Display);
@@ -418,20 +392,19 @@ void Restart()
 	frame = 0;
 	score = 0;
 	Blockerss.clear();
-	delete bird;
-	//bird = new Bird();
-	bird = new Bird(posX + 200, posY, 0, true);
+	delete myChopper;
+	//myChopper = new MyChopper();
+	myChopper = new MyChopper(posX + 200, posY, 0, true);
 	isStarted = false;
 	isDrawn = false;
 	isDeathDrawn = false;
 	diffIndex = 3;
+	isGameOver = false;
 		
 }
 
 void DrawDeathScreen()
 {
-	//cout << "start once" << '\n';
-
 
 	if (isStarted) {
 		glColor3f(0, 0, 0);
@@ -463,39 +436,6 @@ void DrawDeathScreen()
 		glRasterPos2i(150, -90);    //set font start position
 		for (int i = 0; i < strlen(mss); i++)  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mss[i]);
 
-
-
-
-
-			/*
-			vector<string> vec;
-			string line;
-			ifstream myfile("example.txt");
-			int count = 0;
-			if (myfile.is_open())
-			{
-				while (getline(myfile, line) && count < 5)
-				{
-					//str = temp + line + "\n";
-					sprintf_s(mss, "%s", line.c_str());
-
-						glColor3f(1.0, 0.0, 0.0);  //set font color
-						glRasterPos2i(150, 80-append);    //set font start position
-						append += 20;
-						for (int i = 0; i < strlen(mss); i++)  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mss[i]);
-					
-					//c.push_back(line);
-						count++;
-				}
-				myfile.close();
-				
-			}
-
-			else {
-				cout << "Unable to open file";
-			}
-			*/
-
 		
 			vector<MyStruct> vec;
 			string line;
@@ -512,8 +452,6 @@ void DrawDeathScreen()
 				myfile.close();
 
 			}
-
-
 			else {
 				cout << "Unable to open file";
 			}
@@ -524,35 +462,11 @@ void DrawDeathScreen()
 			if (!isDeathDrawn) {
 
 				
-				time_t t = time(0);
-				
-
+				//time_t t = time(0);
+			
 				time_t now = time(0);
-
-				//cout << "Number of sec since January 1,1970:" << now << endl;
-
 				tm *ltm = localtime(&now);
-
-				// print various components of tm structure.
-				//cout << "Year" << 1900 + ltm->tm_year << endl;
-				//cout << "Month: " << 1 + ltm->tm_mon << endl;
-				//cout << "Day: " << ltm->tm_mday << endl;
-				//cout << "Time: " << 1 + ltm->tm_hour << ":";
-				//cout << 1 + ltm->tm_min << ":";
-				//cout << 1 + ltm->tm_sec << endl;
-
-				//string timeString = to_string(1900 + ltm->tm_year)+"/"+to_string(1 + ltm->tm_mon) + "/" + to_string(ltm->tm_mday) + " " + to_string(1 + ltm->tm_hour) + ":" +to_string( 1 + ltm->tm_min) +":" + to_string(1 + ltm->tm_sec);
 				string timeString = to_string(1 + ltm->tm_hour) + ":" + to_string(1 + ltm->tm_min) + ":" + to_string(1 + ltm->tm_sec);
-				cout << "timeString\n";
-				cout << timeString + "\n";
-				//struct tm *aTime = localtime(&t);
-				cout << score + "\n";
-				//int day = aTime->tm_mday;
-				//int month = aTime->tm_mon + 1; // Month is 0 - 11, add 1 to get a jan-dec 1-12 concept
-				//int year = aTime->tm_year + 1900; // Year is # years since 1900
-
-				//string timeString = to_string(year) + " " + to_string(month) + " " + to_string(day);
-				//cout << timeString;
 				vec.push_back(MyStruct(score, timeString));
 			}
 
@@ -566,12 +480,10 @@ void DrawDeathScreen()
 			append += 20;
 			for (int i = 0; i < strlen(mss); i++)  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mss[i]);
 
-			//int append = 0;
 			string savingstr;
 			if (vec.size()<5) {
 				for (int i = 0; i < vec.size(); i++)
 				{
-					//str = temp + line + "\n";
 					string tempstr = vec.at(vec.size() - 1 - i).stringValue + "    " + to_string(vec.at(vec.size() - 1 - i).key);
 					savingstr += tempstr + "\n";
 					sprintf_s(mss, "%s", tempstr.c_str());
@@ -580,8 +492,6 @@ void DrawDeathScreen()
 					glRasterPos2i(150, 80 - append);    //set font start position
 					append += 20;
 					for (int i = 0; i < strlen(mss); i++)  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mss[i]);
-
-					//c.push_back(line);
 					count++;
 				}
 				
@@ -597,8 +507,6 @@ void DrawDeathScreen()
 					glRasterPos2i(150, 80 - append);    //set font start position
 					append += 20;
 					for (int i = 0; i < strlen(mss); i++)  glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mss[i]);
-
-					//c.push_back(line);
 					count++;
 				}
 			}
