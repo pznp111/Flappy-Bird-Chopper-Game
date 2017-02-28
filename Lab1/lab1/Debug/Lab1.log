@@ -1,0 +1,7 @@
+﻿  main.cpp
+x:\users\pznp111\dropbox\coding test\lab1\lab1\draw.h(11): fatal error C1083: Cannot open include file: 'GL/glut.h': No such file or directory
+  Draw.cpp
+x:\users\pznp111\dropbox\coding test\lab1\lab1\draw.h(11): fatal error C1083: Cannot open include file: 'GL/glut.h': No such file or directory
+  Bird.cpp
+x:\users\pznp111\dropbox\coding test\lab1\lab1\draw.h(11): fatal error C1083: Cannot open include file: 'GL/glut.h': No such file or directory
+  Generating Code...

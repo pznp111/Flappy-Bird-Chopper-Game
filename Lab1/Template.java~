@@ -1,0 +1,221 @@
+/**
+ *  This is a Java template for CS3230 - Programming Assignment 1 - Part 1
+ *  (January-2015)
+ *
+ *  You are not required to follow the template. Feel free to modify any part.
+ *
+ *  Comment your code!
+ */
+
+
+import java.io.*;
+import java.util.*;
+
+
+class Template { // in Mooshak online judge, make sure that Java file name = class name that contains Main method
+    public static void main(String[] args) {
+  @SuppressWarnings("resource")
+Scanner sc = new Scanner(System.in);
+        PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out))); // use this (a much faster output routine) instead of Java System.out.println (slow)
+        
+        int T, B;
+  String V, M; 
+        T = sc.nextInt();
+    String[]One;
+     String[]Two;
+     String[]fin;
+        for (int i = 1; i <= T; ++i) {
+            B = sc.nextInt();//base radix
+   sc.nextLine();
+   V = sc.nextLine(); M = sc.nextLine();
+ //One=V.split("");
+ //   Two=M.split("");
+   
+   // Insert solution here.
+   String P = ""; // example output
+   int mind,vind;
+   if(trimZeros(M).indexOf(".")==-1){
+    mind=0; 
+   }else{
+     mind=trimZeros(M).length()-trimZeros(M).indexOf(".")-1;
+   }
+   if(trimZeros(V).indexOf(".")==-1){
+  vind=0; 
+   }
+   else{
+    vind=trimZeros(V).length()-trimZeros(V).indexOf(".")-1; 
+
+   }
+   
+   int digitNO=vind+mind;
+   M=trimZeros(removePoint(M));
+   V=trimZeros(removePoint(V));
+  // System.out.println("input m and v are "+M+" "+V);
+fin=new String[V.length()+M.length()];
+
+String[]tempArray=multiplication(V,M,B,fin);
+     for(int k=0;k<fin.length;k++){
+      P+=fin[k];
+     }
+   
+ //  System.out.println("p= "+P);
+ 
+   P=trimZeros(P);
+//System.out.println("after trim "+P);
+//  System.out.println("******P.length= "+P.length()+"digitNO= "+digitNO);
+   String pr="";
+
+   if(digitNO!=0){
+     if(P.length()>digitNO){
+      
+      pr=P.substring(0,P.length()-digitNO)+"."+P.substring(P.length()-digitNO,P.length());
+   //   System.out.println("ggggg= "+P.substring(0,P.length()-digitNO-1));
+     }
+     else{
+       String Zeros="";
+       for(int d=0;d<digitNO-P.length();d++){
+         Zeros+="0";
+       }
+     pr=trimZeros("0."+ Zeros+P);
+     }
+     
+     
+   //pr=P.substring(0,digitNO-1)+"."+P.substring(digitNO-1,P.length());
+   }else{
+    pr= P;
+   }
+   
+   
+   pw.write(trimZeros(pr));
+   pw.write("\n");
+        }
+         sc.close();
+        pw.close(); // do not forget to use this
+    }
+ 
+ 
+    private static String[] multiplication(String a,String b, int B,String[]fin){
+       String[]One=a.split("");
+    String[]Two=b.split("");
+      
+      
+for(int k=0;k<fin.length;k++){
+ fin[k]="0";
+}
+     int valid1 =0;
+     int valid2=0;
+     int temp=0;
+     int temp1=0;
+  //   for(int f=0;f<Two.length;f++)
+ //      System.out.print("Two is= "+Two[f]);
+     for(int i=b.length();i>0;i--){
+      for(int j=a.length();j>=0;j--){
+        if(j>0){
+       temp=parseDigit(One[j-1].charAt(0)) *parseDigit(Two[i-1].charAt(0));
+//       System.out.println("One= "+One[j-1]+"Two= "+Two[i-1]);
+        }
+        if(j<=0){
+         temp=0; 
+        }
+   //   System.out.println("temp= "+temp);
+   //   System.out.println("****");
+       if(valid1!=0){
+         
+        temp+=valid1;
+        valid1=0;
+    //     System.out.println("valid changes, temp= "+temp);
+       }
+  
+   //   System.out.println("before change= "+fin[i+j-1]);
+///      System.out.println("ooootemp= "+temp);
+  //    System.out.println("for checking fin[]= "+fin[i+j-1]);
+        temp1=(temp);//+parseDigit(fin[i+j-1].charAt(0)); 
+   //    System.out.println("first temp1= "+temp1);
+
+       if(temp1>=B){
+        valid1=temp/B;
+        temp1=temp%B;
+       }
+
+     
+    //  int valid3=valid2;
+     if(parseDigit(fin[i+j-1].charAt(0))+(temp1)+valid2>=B){
+      valid2=((parseDigit(fin[i+j-1].charAt(0))+(temp1))+valid2)/B;
+
+     }
+     fin[i+j-1]=((parseDigit(fin[i+j-1].charAt(0))+(temp1))+valid2)%B+"";
+   //   valid2=valid3;
+
+  //    for(int h=0;h<fin.length;h++){
+ //      System.out.print(fin[h]); 
+ //     }
+//      System.out.println();
+      
+      }
+      
+     }
+    
+
+     return fin;
+    }
+
+    private static String removePoint(String input){
+      String output=input;
+      if((input.indexOf("."))!=-1){
+        output=input.substring(0,input.indexOf("."))+input.substring(input.indexOf(".")+1,input.length());
+      }
+      
+      return output;
+    }
+    
+ private static String trimZeros(String input) {
+  int left = 0;
+  int right = input.length()-1;
+  int fp = input.indexOf('.');
+  if (fp == -1) {
+   fp = input.length();
+  }
+  
+  while(left < fp-1) {
+   if (input.charAt(left) != '0')
+    break;
+   left++;
+  }
+  
+  while (right >= fp) {
+   if (input.charAt(right) != '0') {
+    if (input.charAt(right) == '.')
+     right--;
+    break;
+   }
+   right--;
+  }
+  
+  if (left >= fp)
+   return "0" + input.substring(left,right+1);
+  return input.substring(left,right+1);
+ }
+    
+ /**
+  * Convert digit to int (for reading)
+  */
+ private static int parseDigit(char c) {
+  if (c <= '9') {
+   return c - '0';
+  } 
+  return c - 'A' + 10;
+ }
+ 
+ /**
+  * Convert int to digit. (for printing)
+  */
+ private static char toDigit(int digit) {
+  if (digit <= 9) {
+   return (char)(digit + '0');
+  } 
+  return (char)(digit - 10 + 'A');
+ }
+}
+
+
+
